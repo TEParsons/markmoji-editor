@@ -1,0 +1,4 @@
+markdown
+markmoji
+PyQt5
+PyQtWebEngine
