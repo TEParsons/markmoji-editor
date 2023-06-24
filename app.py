@@ -98,7 +98,6 @@ class MarkmojiEditor(qt.QWidget):
             f"{content_html}\n"
             f"</body>"
         )
-        print(content_html)
         self.html_ctrl.setHtml(content_html)
         # store time of this render
         self._last_render = time.time()
