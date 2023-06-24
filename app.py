@@ -1,12 +1,11 @@
-import sys
 import markdown
 import time
 import threading
-from markmoji.markmoji import Markmoji
-
-import PyQt5.QtGui as gui
 import PyQt5.QtWidgets as qt
 import PyQt5.QtWebEngineWidgets as html
+from markmoji.markmoji import Markmoji
+
+
 
 
 class MarkmojiApp(qt.QApplication):
@@ -14,7 +13,10 @@ class MarkmojiApp(qt.QApplication):
         qt.QApplication.__init__(
             self, argv
         )
-        # Make main window
+        # set theme
+        from .theme import current
+        self.theme = current
+        # make main window
         self.win = MarkmojiEditor(self)
 
 
@@ -51,21 +53,14 @@ class MarkmojiEditor(qt.QWidget):
         self.show()
     
     def apply_theme(self):
-        self.raw_ctrl.setStyleSheet("font-family: JetBrains Mono; font-size: 14pt;")
-    
-    def get_stylesheet(self):
-        code = "<style>\n"
-
-        code += (
-            "@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,700;1,400;1,700&display=swap');\n"
-            "\n"
-            "* {\n"
-            "    font-family: Rubik;\n"
-            "}\n"
-        )
-
-        code += "</style>\n"
-        return code
+        # set style for app
+        # self.setPalette(self.app.theme.app.spec)
+        # set stylesheet for raw_ctrl
+        pygments_style = self.app.theme.editor.spec
+        pygments_css = "font-family: JetBrains Mono; font-size: 14pt;"  # not implimented yet - just use standard value
+        self.raw_ctrl.setStyleSheet(pygments_css)
+        # render HTML so css is reapplied
+        self.render_html()
     
     def on_text(self, evt=None):
         """
@@ -95,14 +90,16 @@ class MarkmojiEditor(qt.QWidget):
         # apply HTML
         content_html = (
             f"<head>\n"
-            f"{self.get_stylesheet()}\n"
+            f"<style>\n"
+            f"{self.app.theme.viewer.spec}\n"
+            f"</style>\n"
             f"</head>\n"
             f"<body>\n"
             f"{content_html}\n"
             f"</body>"
         )
-        self.html_ctrl.setHtml(content_html)
         print(content_html)
+        self.html_ctrl.setHtml(content_html)
         # store time of this render
         self._last_render = time.time()
         # store render dur
@@ -110,7 +107,3 @@ class MarkmojiEditor(qt.QWidget):
         # only keep last 10 render durs
         if len(self._render_durs) > 10:
             self._render_durs = self._render_durs[-10:]
-
-
-app = MarkmojiApp(sys.argv)
-app.exec()
