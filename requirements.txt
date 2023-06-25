@@ -3,3 +3,4 @@ markmoji
 PyQt5
 PyQtWebEngine
 pygments
+catppuccin
