@@ -8,18 +8,31 @@ import markmoji
 
 
 class MarkmojiApp(qt.QApplication):
-    def __init__(self, argv=[]):
+    def __init__(self, show_splash=True, argv=[]):
         qt.QApplication.__init__(
             self, argv
         )
+        # show splash (if requested)
+        if show_splash:
+            splash = qt.QSplashScreen(
+                gui.QPixmap('markmoji_editor/assets/Splash.png')
+            )
+            splash.show()
+            splash.start_time = time.time()
+        
         # set theme
         from .theme import current
         self.theme = current
         # make main window
-        self.win = MarkmojiEditor(self)
+        self.win = MarkmojiFrame(self)
+        
+        # close splash (if shown)
+        if show_splash:    
+            while time.time() - self.app.splash.start_time < 2.5:
+                pass
+            splash.close()
 
-
-class MarkmojiEditor(qt.QWidget):
+class MarkmojiFrame(qt.QWidget):
     def __init__(self, app):
         # create
         qt.QWidget.__init__(self)
@@ -27,13 +40,6 @@ class MarkmojiEditor(qt.QWidget):
         # array to store render times in
         self._render_durs = [0]
         self._last_render = 0
-
-        # start splash screen
-        splash = qt.QSplashScreen(
-            gui.QPixmap('markmoji_editor/assets/Splash.png')
-        )
-        splash.show()
-        splash.start_time = time.time()
 
         # setup interpreter
         self.md = markdown.Markdown(
@@ -61,9 +67,6 @@ class MarkmojiEditor(qt.QWidget):
 
         # show
         self.apply_theme()
-        while time.time() - splash.start_time < 2.5:
-            pass
-        splash.close()
         self.show()
     
     def apply_theme(self):
