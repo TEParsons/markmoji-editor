@@ -2,10 +2,9 @@ import markdown
 import time
 import threading
 import PyQt5.QtWidgets as qt
+import PyQt5.QtGui as gui
 import PyQt5.QtWebEngineWidgets as html
-from markmoji.markmoji import Markmoji
-
-
+import markmoji
 
 
 class MarkmojiApp(qt.QApplication):
@@ -25,16 +24,28 @@ class MarkmojiEditor(qt.QWidget):
         # create
         qt.QWidget.__init__(self)
         self.app = app
-        self.sizer = qt.QVBoxLayout(self)
-        # setup interpreter
-        self.md = markdown.Markdown(
-            extensions=["extra", Markmoji()]
-        )
         # array to store render times in
         self._render_durs = [0]
         self._last_render = 0
 
+        # start splash screen
+        splash = qt.QSplashScreen(
+            gui.QPixmap('markmoji_editor/assets/Splash.png')
+        )
+        splash.show()
+        splash.start_time = time.time()
+
+        # setup interpreter
+        self.md = markdown.Markdown(
+            extensions=["extra", markmoji.Markmoji()]
+        )
+
+        # setup window
+        self.setWindowIcon(gui.QIcon('markmoji_editor/assets/Emblem@16w.png'))
+        self.setWindowTitle(f"Markmoji (v{markmoji.__version__})")
+
         # setup panel
+        self.sizer = qt.QVBoxLayout(self)
         self.panel = qt.QSplitter(self)
         self.sizer.addWidget(self.panel)
         # raw text ctrl
@@ -50,13 +61,15 @@ class MarkmojiEditor(qt.QWidget):
 
         # show
         self.apply_theme()
+        while time.time() - splash.start_time < 2.5:
+            pass
+        splash.close()
         self.show()
     
     def apply_theme(self):
         # set style for app
         # self.setPalette(self.app.theme.app.spec)
         # set stylesheet for raw_ctrl
-        pygments_style = self.app.theme.editor.spec
         pygments_css = "font-family: JetBrains Mono; font-size: 14pt;"  # not implimented yet - just use standard value
         self.raw_ctrl.setStyleSheet(pygments_css)
         # render HTML so css is reapplied
@@ -75,7 +88,6 @@ class MarkmojiEditor(qt.QWidget):
             return
         # render HTML
         threading.Thread(target=self.render_html).run()
-        
     
     def render_html(self):
         """
