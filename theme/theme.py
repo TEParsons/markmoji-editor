@@ -8,31 +8,7 @@ from pygments.style import Style as PygmentsStyle
 __folder__ = Path(__file__).parent
 
 
-class _BaseStyle:
-    """
-    Base class from which style objects for viewer, app and editor are derived.
-    """
-
-    folder = __folder__
-    ext = ""
-
-    def __init__(self, stem):
-        # store stem
-        self.stem = stem
-        # find style file
-        self.path = self.folder / f"{stem}.{self.ext}"
-        # make sure style file exists
-        assert self.path.is_file(), (
-            f"Could not find file for {self.folder.stem} style '{stem}'"
-        )
-        # read in style
-        self.spec = self.load()
-    
-    def load(self):
-        raise NotImplementedError("_BaseStyle should never be instantiated directly.")
-
-
-class ViewerStyle(_BaseStyle):
+class ViewerStyle:
     """
     Object to store parameters for styling the HTML preview
     
@@ -48,15 +24,20 @@ class ViewerStyle(_BaseStyle):
     spec (str)
     :    Loaded CSS style string
     """
+    def __init__(self, stem):
+        # store stem
+        self.stem = stem
+        # find style file
+        self.path = __folder__ / "viewer" / f"{self.stem}.css"
+        # make sure style file exists
+        assert self.path.is_file(), (
+            f"Could not find file for viewer style '{self.stem}'"
+        )
+        # read style file
+        self.spec = self.path.read_text(encoding="utf-8")
 
-    folder = __folder__ / "viewer"
-    ext = "css"
 
-    def load(self):
-        return self.path.read_text(encoding="utf-8")
-
-
-class EditorStyle(_BaseStyle):
+class EditorStyle:
     """
     Object to store parameters for styling the text editor
     
@@ -68,20 +49,26 @@ class EditorStyle(_BaseStyle):
     stem (str)
     :    File stem of the Python file containing the subclass of pygments.Style for the editor's colours
     path (pathlib.Path)
-    :    Path to the Python file containing the subclass of pygments.Style for the editor's colours
+    :    Import path (from the "editor" folder) to the subclass of pygments.Style for the editor's colours, e.g. `catppuccin.latte`.
     spec (str)
     :    Loaded pygments.Style object
-    """
+    """    
+    def __init__(self, stem):
+        # store stem
+        self.stem = stem
+        # get name of package and variable to find object by
+        if "." in self.stem:
+            package_name, variable = self.stem.split(".", maxsplit=1)
+        else:
+            package_name = self.stem
+            variable = "style"
+        # import package
+        package = importlib.import_module(f".theme.editor.{package_name}", package="markmoji_editor")
+        # get spec
+        self.spec = getattr(package, variable)
 
-    folder = __folder__ / "editor"
-    ext = "py"
-    
-    def load(self):
-        # not implemented yet - just use default palette
-        return PygmentsStyle()
 
-
-class AppStyle(_BaseStyle):
+class AppStyle:
     """
     Object to store parameters for styling the text editor
     
@@ -97,14 +84,13 @@ class AppStyle(_BaseStyle):
     spec (str)
     :    Loaded PyQt5.QPalette object
     """
-
-    folder = __folder__ / "editor"
-    ext = "py"
     
-    def load(self):
+    def __init__(self, stem):
+        # store stem
+        self.stem = stem
         # not implemented yet - just use default palette
         from PyQt5.QtWidgets import QWidget
-        return QWidget().palette()
+        self.spec = QWidget().palette()
 
 
 class Theme:
@@ -123,7 +109,7 @@ class Theme:
     def __init__(
             self,
             viewer="light",
-            editor="light",
+            editor="catppuccin.frappe",
             app="light"
     ):
        self.viewer = viewer
