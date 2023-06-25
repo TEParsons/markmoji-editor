@@ -156,8 +156,10 @@ class MarkmojiEditor(qt.QTextEdit):
             token_style = style.style_for_token(token)
             # create format object
             char_format = gui.QTextCharFormat()
+            char_format.setFontFamily("JetBrains Mono")
             char_format.setFontItalic(token_style['italic'])
-            char_format.setFontWeight(600 if token_style['bold'] else 400)
+            if token_style['bold']:
+                char_format.setFontWeight(600)
             char_format.setFontUnderline(token_style['underline'])
             # select corresponding chars
             cursor.setPosition(i)
