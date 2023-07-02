@@ -1,6 +1,7 @@
 import markdown
 import time
 import threading
+import traceback
 import pygments, pygments.lexers
 import PyQt5.QtCore as util
 import PyQt5.QtWidgets as qt
@@ -140,7 +141,15 @@ class MarkmojiFrame(qt.QWidget):
         # get markdown
         content_md = self.md_ctrl.toPlainText()
         # parse to HTML
-        content_html = self.md.convert(content_md)
+        try:
+            content_html = self.md.convert(content_md)
+        except Exception as err:
+            tb = "\n".join(traceback.format_exception(err))
+            content_html = (
+                f"<h1>Error</h1>\n"
+                f"<p>Could not parse Markdown. Error from Python:</p>\n"
+                f"<pre><code>{tb}</code></pre>\n"
+                )
         # apply HTML
         self.html_ctrl.setPlainText(content_html)
         self.html_ctrl.style_text()
