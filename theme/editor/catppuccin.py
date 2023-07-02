@@ -14,7 +14,7 @@ class frappe(FrappeStyle):
     styles = FrappeStyle.styles
     styles.update({
         Token: "#c6d0f5",
-        Token.Generic.Heading: "bold",
+        Token.Generic.Heading: "#8caaee bold",
     })
 
 
@@ -26,7 +26,7 @@ class latte(LatteStyle):
     styles = LatteStyle.styles
     styles.update({
         Token: "#4c4f69",
-        Token.Generic.Heading: "bold",
+        Token.Generic.Heading: "#8caaee bold",
     })
 
 
@@ -38,7 +38,7 @@ class macchiato(MacchiatoStyle):
     styles = LatteStyle.styles
     styles.update({
         Token: "#cad3f5",
-        Token.Generic.Heading: "bold",
+        Token.Generic.Heading: "#8caaee bold",
     })
 
 
@@ -50,7 +50,7 @@ class mocha(MochaStyle):
     styles = LatteStyle.styles
     styles.update({
         Token: "#cdd6f4",
-        Token.Generic.Heading: "bold",
+        Token.Generic.Heading: "#8caaee bold",
     })
 
 
