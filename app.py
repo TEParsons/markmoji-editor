@@ -2,6 +2,7 @@ import markdown
 import time
 import threading
 import pygments, pygments.lexers
+import PyQt5.QtCore as util
 import PyQt5.QtWidgets as qt
 import PyQt5.QtGui as gui
 import PyQt5.QtWebEngineWidgets as html
@@ -50,10 +51,11 @@ class MarkmojiFrame(qt.QWidget):
         # setup window
         self.setWindowIcon(gui.QIcon('markmoji_editor/assets/Emblem@16w.png'))
         self.setWindowTitle(f"Markmoji (v{markmoji.__version__})")
+        self.sizer = qt.QVBoxLayout(self)
 
         # setup panel
-        self.sizer = qt.QVBoxLayout(self)
         self.panel = qt.QSplitter(self)
+        self.panel.setChildrenCollapsible(False)
         self.sizer.addWidget(self.panel)
         # raw text ctrl
         self.md_ctrl = MarkmojiEditor(frame=self)
@@ -63,10 +65,49 @@ class MarkmojiFrame(qt.QWidget):
         self.panel.addWidget(self.html_ctrl)
         # rendered HTML ctrl
         self.html_view = html.QWebEngineView()
+        self.html_view.setMinimumWidth(128)
         self.panel.addWidget(self.html_view)
 
         # bind rendering to text edit
         self.md_ctrl.textChanged.connect(self.on_text)
+
+        # add view toggle
+        self.view_ctrl = qt.QWidget(self)
+        self.view_ctrl.setMaximumHeight(48)
+        self.view_ctrl.sizer = qt.QHBoxLayout(self.view_ctrl)
+        self.sizer.addWidget(self.view_ctrl, alignment=util.Qt.AlignHCenter)
+        # markdown button
+        self.md_btn = qt.QPushButton("", self)
+        self.md_btn.setIcon(gui.QIcon('markmoji_editor/assets/icons/view_md.svg'))
+        self.md_btn.setIconSize(util.QSize(16, 16))
+        self.md_btn.setMaximumSize(48, 32)
+        self.md_btn.setCheckable(True)
+        self.md_btn.clicked.connect(self.toggle_md)
+        self.view_ctrl.sizer.addWidget(self.md_btn)
+        # html button
+        self.html_btn = qt.QPushButton("", self)
+        self.html_btn.setIcon(gui.QIcon('markmoji_editor/assets/icons/view_html.svg'))
+        self.html_btn.setIconSize(util.QSize(16, 16))
+        self.html_btn.setMaximumSize(48, 32)
+        self.html_btn.setCheckable(True)
+        self.html_btn.clicked.connect(self.toggle_html)
+        self.view_ctrl.sizer.addWidget(self.html_btn)
+        # preview button
+        self.view_btn = qt.QPushButton("", self)
+        self.view_btn.setIcon(gui.QIcon('markmoji_editor/assets/icons/view_preview.svg'))
+        self.view_btn.setIconSize(util.QSize(16, 16))
+        self.view_btn.setMaximumSize(48, 32)
+        self.view_btn.setCheckable(True)
+        self.view_btn.clicked.connect(self.toggle_view)
+        self.view_ctrl.sizer.addWidget(self.view_btn)
+
+        # apply start layout
+        self.md_btn.setChecked(True)
+        self.toggle_md()
+        self.html_btn.setChecked(False)
+        self.toggle_html()
+        self.view_btn.setChecked(True)
+        self.toggle_view()
 
         # show
         self.apply_theme()
@@ -122,6 +163,24 @@ class MarkmojiFrame(qt.QWidget):
         # only keep last 10 render durs
         if len(self._render_durs) > 10:
             self._render_durs = self._render_durs[-10:]
+    
+    def toggle_md(self, evt=None):
+        if self.md_btn.isChecked():
+            self.md_ctrl.show()
+        else:
+            self.md_ctrl.hide()
+    
+    def toggle_html(self, evt=None):
+        if self.html_btn.isChecked():
+            self.html_ctrl.show()
+        else:
+            self.html_ctrl.hide()
+    
+    def toggle_view(self, evt=None):
+        if self.view_btn.isChecked():
+            self.html_view.show()
+        else:
+            self.html_view.hide()
 
 
 class StyledTextCtrl(qt.QTextEdit):
@@ -129,6 +188,7 @@ class StyledTextCtrl(qt.QTextEdit):
                 # initialise
         qt.QTextEdit.__init__(self)
         self.setAcceptRichText(False)
+        self.setMinimumWidth(128)
         self.frame = frame
         self.app = self.frame.app
         # setup lexer
