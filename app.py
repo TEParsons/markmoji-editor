@@ -208,8 +208,7 @@ class StyledTextCtrl(qt.QTextEdit):
         # set base style
         self.setStyleSheet(
             f"background-color: {style.background_color};"
-            f"color: #{style.style_for_token(pygments.token.Token)['color']};"
-            f"font-family: JetBrains Mono;"
+            f"font-family: JetBrains Mono, Noto Color Emoji;"
             f"font-size: 14pt;"
         )
         # lex content to get tokens
@@ -226,6 +225,7 @@ class StyledTextCtrl(qt.QTextEdit):
             if token_style['bold']:
                 char_format.setFontWeight(600)
             char_format.setFontUnderline(token_style['underline'])
+            char_format.setForeground(gui.QColor("#" + token_style['color']))
             # select corresponding chars
             cursor.setPosition(i)
             cursor.movePosition(cursor.Right, n=len(text), mode=cursor.KeepAnchor)
