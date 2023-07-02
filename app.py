@@ -193,6 +193,48 @@ class StyledTextCtrl(qt.QTextEdit):
         self.app = self.frame.app
         # setup lexer
         self.lexer = pygments.lexers.get_lexer_by_name(language)
+        # setup right click
+        self.setContextMenuPolicy(util.Qt.CustomContextMenu)
+        self.customContextMenuRequested.connect(self.on_context_menu)
+    
+    def on_context_menu(self):
+        # setup menu style
+        style = self.app.theme.editor.spec
+        stylesheet = (
+            f"QMenu::item{{"
+            f"   background-color: {style.background_color};"
+            f"   color: #{style.style_for_token(pygments.token.Token)['color']};"
+            f"   font-family: JetBrains Mono,Noto Emoji;"
+            f"}}"
+
+            f"QMenu::item:selected{{"
+            f"   background-color: {style.line_number_background_color};"
+            f"   color: {style.line_number_color};"
+            f"}}"
+        )
+        # make menu
+        menu = self.createStandardContextMenu()
+        menu.setStyleSheet(stylesheet)
+        # add emoji section
+        menu.addSeparator()
+        submenu = menu.addMenu("Insert &Handler")
+        submenu.setStyleSheet(stylesheet)
+        # add emojis
+        for emoji, cls in markmoji.handlers.map.items():
+            # skip base classes
+            if emoji in ("?", "〽️", "❓"):
+                continue
+            # add emoji
+            submenu.addAction(f"{emoji} {cls.__name__}", self.insert_emoji)
+            
+        menu.exec_(gui.QCursor.pos())
+    
+    def insert_emoji(self, evt=None):
+        # get emoji
+        text = self.sender().text()
+        emoji = text.split(" ")[0]
+        # insert emoji
+        self.insertPlainText(emoji + "[]()")
     
     def style_text(self):
         """
@@ -208,7 +250,7 @@ class StyledTextCtrl(qt.QTextEdit):
         # set base style
         self.setStyleSheet(
             f"background-color: {style.background_color};"
-            f"font-family: JetBrains Mono, Noto Color Emoji;"
+            f"font-family: JetBrains Mono, Noto Emoji;"
             f"font-size: 14pt;"
         )
         # lex content to get tokens
