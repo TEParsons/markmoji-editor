@@ -49,6 +49,7 @@ class MarkmojiFrame(qt.QWidget):
         # setup window
         self.setWindowIcon(gui.QIcon('markmoji_editor/assets/Emblem@16w.png'))
         self.setWindowTitle(f"Markmoji (v{markmoji.__version__})")
+        self.resize(1080, 720)
         self.sizer = qt.QVBoxLayout(self)
 
         # setup panel
