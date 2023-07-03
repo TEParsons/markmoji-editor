@@ -4,7 +4,30 @@ import PyQt5.QtCore as util
 
 
 class ViewToggle(qt.QWidget):
-    def __init__(self, frame, ctrls, start_values=None):
+
+    class ViewToggleButton(qt.QPushButton):
+        def __init__(self, parent, ctrl, icon_name=None, label=""):
+            # initialise
+            qt.QPushButton.__init__(self, "", parent)
+            self.parent = parent
+            
+            # link ctrl
+            self.ctrl = ctrl
+            # set icon
+            if icon_name is not None:
+                icon = gui.QIcon(f"markmoji_editor/assets/icons/{icon_name}.svg")
+                self.setIcon(icon)
+            # set label
+            self.setText(label)
+            # set size
+            self.setIconSize(util.QSize(16, 16))
+            self.setMaximumSize(48, 32)
+            # make into a toggle button
+            self.setCheckable(True)
+            # link function
+            self.clicked.connect(self.parent.refresh_view)
+
+    def __init__(self, frame):
         # initialise
         qt.QWidget.__init__(self, frame)
         self.frame = frame
@@ -12,45 +35,28 @@ class ViewToggle(qt.QWidget):
         self.setMaximumHeight(44)
         self.setMinimumHeight(44)
         self.sizer = qt.QHBoxLayout(self)
-
-        # store ctrls
-        self.ctrls = ctrls
         # array for buttons
-        self.btns = {}
-
-        for name in self.ctrls:
-            # make button
-            btn = qt.QPushButton("", self)
-            self.btns[name] = btn
-            # make icon
-            icon = gui.QIcon(f"markmoji_editor/assets/icons/{name}.svg")
-            # try to set icon, set label if null
-            if not icon.isNull():
-                btn.setIcon(icon)
-            else:
-                btn.setText(name)
-            # set size
-            btn.setIconSize(util.QSize(16, 16))
-            btn.setMaximumSize(48, 32)
-            # make into a toggle button
-            btn.setCheckable(True)
-            # link function
-            btn.clicked.connect(self.refresh_view)
-            # add to sizer
-            self.sizer.addWidget(btn)
-
-        # apply start layout
-        if start_values is None:
-            start_values = {name: True for name in self.btns}
-        for name, val in start_values.items():
-            if name in self.btns:
-                self.btns[name].setChecked(val)
+        self.btns = []
+    
+    def add_button(self, ctrl, icon_name=None, label=""):
+        # make button
+        btn = self.ViewToggleButton(self, ctrl, icon_name=icon_name, label=label)
+        self.btns.append(btn)
+        # add to sizer
+        self.sizer.addWidget(btn)
+    
+    def set_values(self, values):
+        assert len(values) == len(self.btns), "When setting values for ViewToggle, there must be the same number of values as there are buttons."
+        # set each button in order
+        for btn, val in zip(self.btns, values):
+            btn.setChecked(val)
+        # refresh
         self.refresh_view()
     
     def refresh_view(self, evt=None):
-        for name, btn in self.btns.items():
+        for btn in self.btns:
             # show/hide ctrl according to button state
             if btn.isChecked():
-                self.ctrls[name].show()
+                btn.ctrl.show()
             else:
-                self.ctrls[name].hide()
+                btn.ctrl.hide()

@@ -70,19 +70,11 @@ class MarkmojiFrame(qt.QWidget):
         self.md_ctrl.textChanged.connect(self.on_text)
 
         # add view toggle
-        self.view_ctrl = toggle.ViewToggle(
-            self, 
-            ctrls={
-                'view_md': self.md_ctrl,
-                'view_html': self.html_ctrl,
-                'view_preview': self.html_view
-            },
-            start_values={
-                'view_md': True,
-                'view_html': False,
-                'view_preview': True
-            }
-        )
+        self.view_ctrl = toggle.ViewToggle(self)
+        self.view_ctrl.add_button(ctrl=self.md_ctrl, icon_name="view_md")
+        self.view_ctrl.add_button(ctrl=self.html_ctrl, icon_name="view_html")
+        self.view_ctrl.add_button(ctrl=self.html_view, icon_name="view_preview")
+        self.view_ctrl.set_values((True, False, True))
         self.sizer.addWidget(self.view_ctrl, alignment=util.Qt.AlignHCenter)
 
         # show
