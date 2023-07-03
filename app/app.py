@@ -26,7 +26,7 @@ class MarkmojiApp(qt.QApplication):
             splash.start_time = time.time()
         
         # set theme
-        from .theme import current
+        from ..theme import current
         self.theme = current
         # make main window
         self.win = MarkmojiFrame(self)
