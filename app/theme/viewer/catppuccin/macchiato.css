@@ -9,3 +9,9 @@
     color: var(--ctp-macchiato-text);
     background-color: var(--ctp-macchiato-base)
 }
+
+body {
+    border: 1px solid var(--ctp-macchiato-mantle);
+    padding: 0;
+    margin: 0;
+}

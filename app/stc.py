@@ -75,6 +75,7 @@ class StyledTextCtrl(qt.QTextEdit):
             f"background-color: {style.background_color};"
             f"font-family: JetBrains Mono, Noto Emoji;"
             f"font-size: 14pt;"
+            f"border: 1px solid {style.line_number_background_color};"
         )
         # lex content to get tokens
         tokens = pygments.lex(self.toPlainText(), lexer=self.lexer)
