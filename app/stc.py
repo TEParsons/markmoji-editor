@@ -7,12 +7,13 @@ import PyQt5.QtGui as gui
 
 class StyledTextCtrl(qt.QTextEdit):
     def __init__(self, frame, language):
-                # initialise
+        # initialise
         qt.QTextEdit.__init__(self)
-        self.setAcceptRichText(False)
-        self.setMinimumWidth(128)
         self.frame = frame
         self.app = self.frame.app
+        self.setAcceptRichText(False)
+        # set minimum size
+        self.setMinimumWidth(128)
         # setup lexer
         self.lexer = pygments.lexers.get_lexer_by_name(language)
         # setup right click

@@ -3,13 +3,11 @@ import markmoji
 import time
 import threading
 import traceback
-import pygments.lexers
 import PyQt5.QtCore as util
 import PyQt5.QtWidgets as qt
 import PyQt5.QtGui as gui
-import PyQt5.QtWebEngineWidgets as html
 
-from . import stc
+from . import stc, viewer
 
 
 class MarkmojiApp(qt.QApplication):
@@ -42,9 +40,6 @@ class MarkmojiFrame(qt.QWidget):
         # create
         qt.QWidget.__init__(self)
         self.app = app
-        # array to store render times in
-        self._render_durs = [0]
-        self._last_render = 0
 
         # setup interpreter
         self.md = markdown.Markdown(
@@ -66,11 +61,9 @@ class MarkmojiFrame(qt.QWidget):
         self.panel.addWidget(self.md_ctrl)
         # raw html ctrl
         self.html_ctrl = HTMLReader(frame=self)
-        self.html_ctrl.setMinimumWidth(128)
         self.panel.addWidget(self.html_ctrl)
         # rendered HTML ctrl
-        self.html_view = html.QWebEngineView()
-        self.html_view.setMinimumWidth(128)
+        self.html_view = viewer.HTMLViewer(frame=self)
         self.panel.addWidget(self.html_view)
 
         # bind rendering to text edit
@@ -140,8 +133,6 @@ class MarkmojiFrame(qt.QWidget):
         """
         Render markdown content into HTML
         """
-        # start timing
-        start = time.time()
         # get markdown
         content_md = self.md_ctrl.toPlainText()
         # parse to HTML
@@ -154,28 +145,11 @@ class MarkmojiFrame(qt.QWidget):
                 f"<p>Could not parse Markdown. Error from Python:</p>\n"
                 f"<pre><code>{tb}</code></pre>\n"
                 )
-        # apply HTML
+        # apply to HTML ctrl
         self.html_ctrl.setPlainText(content_html)
         self.html_ctrl.style_text()
-        # preview HTML
-        content_html = (
-            f"<head>\n"
-            f"<style>\n"
-            f"{self.app.theme.viewer.spec}\n"
-            f"</style>\n"
-            f"</head>\n"
-            f"<body>\n"
-            f"{content_html}\n"
-            f"</body>"
-        )
-        self.html_view.setHtml(content_html)
-        # store time of this render
-        self._last_render = time.time()
-        # store render dur
-        self._render_durs.append(self._last_render - start)
-        # only keep last 10 render durs
-        if len(self._render_durs) > 10:
-            self._render_durs = self._render_durs[-10:]
+        # apply to HTML viewer
+        self.html_view.set_body(content_html)
     
     def toggle_md(self, evt=None):
         if self.md_btn.isChecked():
