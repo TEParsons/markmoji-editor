@@ -7,7 +7,7 @@ import PyQt5.QtCore as util
 import PyQt5.QtWidgets as qt
 import PyQt5.QtGui as gui
 
-from . import stc, viewer
+from . import stc, viewer, toggle
 
 
 class MarkmojiApp(qt.QApplication):
@@ -70,42 +70,20 @@ class MarkmojiFrame(qt.QWidget):
         self.md_ctrl.textChanged.connect(self.on_text)
 
         # add view toggle
-        self.view_ctrl = qt.QWidget(self)
-        self.view_ctrl.setMaximumHeight(48)
-        self.view_ctrl.sizer = qt.QHBoxLayout(self.view_ctrl)
+        self.view_ctrl = toggle.ViewToggle(
+            self, 
+            ctrls={
+                'view_md': self.md_ctrl,
+                'view_html': self.html_ctrl,
+                'view_preview': self.html_view
+            },
+            start_values={
+                'view_md': True,
+                'view_html': False,
+                'view_preview': True
+            }
+        )
         self.sizer.addWidget(self.view_ctrl, alignment=util.Qt.AlignHCenter)
-        # markdown button
-        self.md_btn = qt.QPushButton("", self)
-        self.md_btn.setIcon(gui.QIcon('markmoji_editor/assets/icons/view_md.svg'))
-        self.md_btn.setIconSize(util.QSize(16, 16))
-        self.md_btn.setMaximumSize(48, 32)
-        self.md_btn.setCheckable(True)
-        self.md_btn.clicked.connect(self.toggle_md)
-        self.view_ctrl.sizer.addWidget(self.md_btn)
-        # html button
-        self.html_btn = qt.QPushButton("", self)
-        self.html_btn.setIcon(gui.QIcon('markmoji_editor/assets/icons/view_html.svg'))
-        self.html_btn.setIconSize(util.QSize(16, 16))
-        self.html_btn.setMaximumSize(48, 32)
-        self.html_btn.setCheckable(True)
-        self.html_btn.clicked.connect(self.toggle_html)
-        self.view_ctrl.sizer.addWidget(self.html_btn)
-        # preview button
-        self.view_btn = qt.QPushButton("", self)
-        self.view_btn.setIcon(gui.QIcon('markmoji_editor/assets/icons/view_preview.svg'))
-        self.view_btn.setIconSize(util.QSize(16, 16))
-        self.view_btn.setMaximumSize(48, 32)
-        self.view_btn.setCheckable(True)
-        self.view_btn.clicked.connect(self.toggle_view)
-        self.view_ctrl.sizer.addWidget(self.view_btn)
-
-        # apply start layout
-        self.md_btn.setChecked(True)
-        self.toggle_md()
-        self.html_btn.setChecked(False)
-        self.toggle_html()
-        self.view_btn.setChecked(True)
-        self.toggle_view()
 
         # show
         self.apply_theme()
@@ -113,8 +91,8 @@ class MarkmojiFrame(qt.QWidget):
     
     def apply_theme(self):
         self.md_ctrl.style_text()
-        # render HTML so css is reapplied
-        self.render_html()
+        self.html_ctrl.style_text()
+        self.html_view.apply_theme()
     
     def on_text(self, evt=None):
         """
@@ -150,24 +128,6 @@ class MarkmojiFrame(qt.QWidget):
         self.html_ctrl.style_text()
         # apply to HTML viewer
         self.html_view.set_body(content_html)
-    
-    def toggle_md(self, evt=None):
-        if self.md_btn.isChecked():
-            self.md_ctrl.show()
-        else:
-            self.md_ctrl.hide()
-    
-    def toggle_html(self, evt=None):
-        if self.html_btn.isChecked():
-            self.html_ctrl.show()
-        else:
-            self.html_ctrl.hide()
-    
-    def toggle_view(self, evt=None):
-        if self.view_btn.isChecked():
-            self.html_view.show()
-        else:
-            self.html_view.hide()
 
 
 class MarkmojiEditor(stc.StyledTextCtrl):
