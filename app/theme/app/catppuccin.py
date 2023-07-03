@@ -35,46 +35,108 @@ def set_colors(palette, values):
 
 
 # --- Catppuccin Frappe ---
-_flav = Flavour.frappe()
+frappe_flavour = Flavour.frappe()
 frappe = QPalette()
 set_colors(frappe, {
-    QPalette.Button: {
-        QPalette.Active: _flav.crust, 
-        QPalette.Inactive: _flav.blue,
-        QPalette.Disabled: _flav.base,
-    },
-    # QPalette.Light: _flav, 
-    # QPalette.Midlight: _flav, 
-    # QPalette.Mid: _flav,
-    # QPalette.Dark: _flav,
-    # QPalette.WindowText: _flav, 
-    QPalette.Text: _flav.text, 
-    # QPalette.BrightText: _flav, 
-    # QPalette.ButtonText: _flav, 
-    # QPalette.HighlightedText: _flav, 
-    # QPalette.ToolTipText: _flav,
-    # QPalette.PlaceholderText: _flav,
-    QPalette.Base: _flav.base, 
-    # QPalette.AlternateBase: _flav,
-    QPalette.Window: _flav.mantle, 
-    # QPalette.ToolTipBase: _flav,
-    # QPalette.Shadow: _flav, 
-    # QPalette.Highlight: _flav,
-    # QPalette.Link: _flav, 
-    # QPalette.LinkVisited: _flav, 
+    QPalette.Base: frappe_flavour.base,
+    QPalette.AlternateBase: frappe_flavour.crust,
+    QPalette.Light: frappe_flavour.overlay2,
+    QPalette.Midlight: frappe_flavour.overlay1,
+    QPalette.Mid: frappe_flavour.overlay0,
+    QPalette.Dark: frappe_flavour.surface2,
+    QPalette.Window: frappe_flavour.mantle,
+    QPalette.WindowText: frappe_flavour.text,
+    QPalette.Shadow: frappe_flavour.overlay0,
+    QPalette.Text: frappe_flavour.text,
+    QPalette.BrightText: frappe_flavour.rosewater,
+    QPalette.PlaceholderText: frappe_flavour.overlay1,
+    QPalette.Highlight: frappe_flavour.surface2,
+    QPalette.HighlightedText: frappe_flavour.text, 
+    QPalette.Link: frappe_flavour.blue,
+    QPalette.LinkVisited: frappe_flavour.lavender,
+    QPalette.ToolTipBase: frappe_flavour.overlay0,
+    QPalette.ToolTipText: frappe_flavour.text,
+    QPalette.Button: frappe_flavour.surface0,
+    QPalette.ButtonText: frappe_flavour.text,
 })
 
 
 # --- Catppuccin Latte ---
-_spec = Flavour.latte()
+latte_flavour = Flavour.latte()
 latte = QPalette()
+set_colors(frappe, {
+    QPalette.Base: latte_flavour.base,
+    QPalette.AlternateBase: latte_flavour.crust,
+    QPalette.Light: latte_flavour.overlay2,
+    QPalette.Midlight: latte_flavour.overlay1,
+    QPalette.Mid: latte_flavour.overlay0,
+    QPalette.Dark: latte_flavour.surface2,
+    QPalette.Window: latte_flavour.mantle,
+    QPalette.WindowText: latte_flavour.text,
+    QPalette.Shadow: latte_flavour.overlay0,
+    QPalette.Text: latte_flavour.text,
+    QPalette.BrightText: latte_flavour.rosewater,
+    QPalette.PlaceholderText: latte_flavour.overlay1,
+    QPalette.Highlight: latte_flavour.surface2,
+    QPalette.HighlightedText: latte_flavour.text, 
+    QPalette.Link: latte_flavour.blue,
+    QPalette.LinkVisited: latte_flavour.lavender,
+    QPalette.ToolTipBase: latte_flavour.overlay0,
+    QPalette.ToolTipText: latte_flavour.text,
+    QPalette.Button: latte_flavour.surface0,
+    QPalette.ButtonText: latte_flavour.text,
+})
 
 
 # --- Catppuccin Macchiato ---
-_spec = Flavour.macchiato()
+macchiato_flavour = Flavour.macchiato()
 macchiato = QPalette()
+set_colors(frappe, {
+    QPalette.Base: macchiato_flavour.base,
+    QPalette.AlternateBase: macchiato_flavour.crust,
+    QPalette.Light: macchiato_flavour.overlay2,
+    QPalette.Midlight: macchiato_flavour.overlay1,
+    QPalette.Mid: macchiato_flavour.overlay0,
+    QPalette.Dark: macchiato_flavour.surface2,
+    QPalette.Window: macchiato_flavour.mantle,
+    QPalette.WindowText: macchiato_flavour.text,
+    QPalette.Shadow: macchiato_flavour.overlay0,
+    QPalette.Text: macchiato_flavour.text,
+    QPalette.BrightText: macchiato_flavour.rosewater,
+    QPalette.PlaceholderText: macchiato_flavour.overlay1,
+    QPalette.Highlight: macchiato_flavour.surface2,
+    QPalette.HighlightedText: macchiato_flavour.text, 
+    QPalette.Link: macchiato_flavour.blue,
+    QPalette.LinkVisited: macchiato_flavour.lavender,
+    QPalette.ToolTipBase: macchiato_flavour.overlay0,
+    QPalette.ToolTipText: macchiato_flavour.text,
+    QPalette.Button: macchiato_flavour.surface0,
+    QPalette.ButtonText: macchiato_flavour.text,
+})
 
 
 # --- Catppuccin Mocha ---
-_spec = Flavour.mocha()
+mocha_flavour = Flavour.mocha()
 mocha = QPalette()
+set_colors(frappe, {
+    QPalette.Base: mocha_flavour.base,
+    QPalette.AlternateBase: mocha_flavour.crust,
+    QPalette.Light: mocha_flavour.overlay2,
+    QPalette.Midlight: mocha_flavour.overlay1,
+    QPalette.Mid: mocha_flavour.overlay0,
+    QPalette.Dark: mocha_flavour.surface2,
+    QPalette.Window: mocha_flavour.mantle,
+    QPalette.WindowText: mocha_flavour.text,
+    QPalette.Shadow: mocha_flavour.overlay0,
+    QPalette.Text: mocha_flavour.text,
+    QPalette.BrightText: mocha_flavour.rosewater,
+    QPalette.PlaceholderText: mocha_flavour.overlay1,
+    QPalette.Highlight: mocha_flavour.surface2,
+    QPalette.HighlightedText: mocha_flavour.text, 
+    QPalette.Link: mocha_flavour.blue,
+    QPalette.LinkVisited: mocha_flavour.lavender,
+    QPalette.ToolTipBase: mocha_flavour.overlay0,
+    QPalette.ToolTipText: mocha_flavour.text,
+    QPalette.Button: mocha_flavour.surface0,
+    QPalette.ButtonText: mocha_flavour.text,
+})

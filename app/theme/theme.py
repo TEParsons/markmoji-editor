@@ -116,8 +116,8 @@ class Theme:
     def __init__(
             self,
             viewer="light",
-            editor="catppuccin.frappe",
-            app="catppuccin.frappe"
+            editor="catppuccin.latte",
+            app="catppuccin.latte"
     ):
        self.viewer = viewer
        self.editor = editor
