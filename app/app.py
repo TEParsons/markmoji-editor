@@ -7,7 +7,7 @@ import PyQt5.QtCore as util
 import PyQt5.QtWidgets as qt
 import PyQt5.QtGui as gui
 
-from . import stc, viewer, toggle
+from . import stc, viewer, toggle, menu
 
 
 class MarkmojiApp(qt.QApplication):
@@ -36,7 +36,7 @@ class MarkmojiApp(qt.QApplication):
                 pass
             splash.close()
 
-class MarkmojiFrame(qt.QWidget):
+class MarkmojiFrame(qt.QMainWindow):
     def __init__(self, app):
         # create
         qt.QWidget.__init__(self)
@@ -51,21 +51,30 @@ class MarkmojiFrame(qt.QWidget):
         self.setWindowIcon(gui.QIcon('markmoji_editor/assets/Emblem@16w.png'))
         self.setWindowTitle(f"Markmoji (v{markmoji.__version__})")
         self.resize(1080, 720)
-        self.sizer = qt.QVBoxLayout(self)
+
+        # add menu
+        self.menu = menu.MarkmojiMenu(self)
+        self.setMenuBar(self.menu)
 
         # setup panel
-        self.panel = qt.QSplitter(self)
-        self.panel.setChildrenCollapsible(False)
-        self.sizer.addWidget(self.panel)
+        self.panel = qt.QWidget(self)
+        self.setCentralWidget(self.panel)
+        self.sizer = qt.QVBoxLayout(self.panel)
+        self.panel.setLayout(self.sizer)
+
+        # setup panel
+        self.ctrls = qt.QSplitter(self.panel)
+        self.ctrls.setChildrenCollapsible(False)
+        self.sizer.addWidget(self.ctrls)
         # raw text ctrl
         self.md_ctrl = MarkmojiEditor(frame=self)
-        self.panel.addWidget(self.md_ctrl)
+        self.ctrls.addWidget(self.md_ctrl)
         # raw html ctrl
         self.html_ctrl = HTMLReader(frame=self)
-        self.panel.addWidget(self.html_ctrl)
+        self.ctrls.addWidget(self.html_ctrl)
         # rendered HTML ctrl
         self.html_view = viewer.HTMLViewer(frame=self)
-        self.panel.addWidget(self.html_view)
+        self.ctrls.addWidget(self.html_view)
 
         # bind rendering to text edit
         self.md_ctrl.textChanged.connect(self.on_text)

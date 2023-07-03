@@ -163,4 +163,50 @@ class Theme:
         self._app = AppStyle(value)
 
 
+def get_all_themes():
+    from PyQt5.QtGui import QPalette
+    from pygments.style import Style
+
+    def get_modules(module, cls):
+        """
+        Get the spec objects for the given module (editor or app) which match the given class
+        """
+        themes = {}
+        # import folder as package
+        pkg = importlib.import_module(f".app.theme.{module}", package="markmoji_editor")
+        # iterate through names
+        for name in dir(pkg):
+            # skip private names
+            if name.startswith("_"):
+                continue
+            # get names from __all__
+            themes[name] = getattr(pkg, name).__all__
+        
+        return themes
+    
+    def get_files(folder, ext):
+        themes = {}
+        # iterate through subfolders
+        for subfolder in folder.glob("*/"):
+            # add key to dict
+            themes[subfolder.stem] = []
+            # iterate through theme files
+            for file in subfolder.glob(f"*.{ext}"):
+                # add its name to dict
+                themes[subfolder.stem].append(file.stem)
+        
+        return themes
+
+
+    themes = {}
+    # get app themes
+    themes['app'] = get_modules("app", QPalette)
+    # get editor themes
+    themes['editor'] = get_modules("editor", Style)
+    # get viewer themes
+    themes['viewer'] = get_files(__folder__ / "viewer", "css")
+
+    return themes
+
+
 current = Theme()

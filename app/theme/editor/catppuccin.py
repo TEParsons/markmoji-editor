@@ -6,6 +6,8 @@ from catppuccin.extras.pygments import MacchiatoStyle
 from catppuccin.extras.pygments import MochaStyle
 
 
+__all__ = ["frappe", "latte", "macchiato", "mocha"]
+
 class frappe(FrappeStyle):
     background_color = "#303446"
     line_number_background_color = "#292c3c"

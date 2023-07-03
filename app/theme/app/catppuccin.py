@@ -1,5 +1,10 @@
 from PyQt5.QtGui import QPalette, QColor
 from catppuccin.flavour import Flavour
+
+
+__all__ = ["frappe", "latte", "macchiato", "mocha"]
+
+
 """
 ### Colour roles
 QPalette.Button, 
@@ -91,7 +96,7 @@ set_colors(frappe, {
 # --- Catppuccin Macchiato ---
 macchiato_flavour = Flavour.macchiato()
 macchiato = QPalette()
-set_colors(frappe, {
+set_colors(macchiato, {
     QPalette.Base: macchiato_flavour.base,
     QPalette.AlternateBase: macchiato_flavour.crust,
     QPalette.Light: macchiato_flavour.overlay2,
@@ -118,7 +123,7 @@ set_colors(frappe, {
 # --- Catppuccin Mocha ---
 mocha_flavour = Flavour.mocha()
 mocha = QPalette()
-set_colors(frappe, {
+set_colors(mocha, {
     QPalette.Base: mocha_flavour.base,
     QPalette.AlternateBase: mocha_flavour.crust,
     QPalette.Light: mocha_flavour.overlay2,

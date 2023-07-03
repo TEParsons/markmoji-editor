@@ -1,1 +1,1 @@
-from .theme import current
+from .theme import current, get_all_themes

@@ -2,6 +2,9 @@ from pygments.token import Token
 from pygments.style import Style
 
 
+__all__ = ["light", "dark", "black"]
+
+
 class light(Style):
     background_color = "#ffffff"
     line_number_background_color = "#f2f2f2"
