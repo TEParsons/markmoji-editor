@@ -27,8 +27,14 @@ class ViewerStyle:
     def __init__(self, stem):
         # store stem
         self.stem = stem
+        # get name of stylesheet and variable to find object by
+        if "." in self.stem:
+            folder, stylesheet = self.stem.split(".", maxsplit=1)
+            terminus = Path(folder) / f"{stylesheet}.css"
+        else:
+            terminus = f"{self.stem}.css"
         # find style file
-        self.path = __folder__ / "viewer" / f"{self.stem}.css"
+        self.path = __folder__ / "viewer" / terminus
         # make sure style file exists
         assert self.path.is_file(), (
             f"Could not find file for viewer style '{self.stem}'"
@@ -115,7 +121,7 @@ class Theme:
 
     def __init__(
             self,
-            viewer="light",
+            viewer="catppuccin.latte",
             editor="catppuccin.latte",
             app="catppuccin.latte"
     ):
