@@ -57,7 +57,6 @@ class MarkmojiFrame(qt.QWidget):
         self.sizer.addWidget(self.panel)
         # raw text ctrl
         self.md_ctrl = MarkmojiEditor(frame=self)
-        self.md_ctrl.setMinimumWidth(128)
         self.panel.addWidget(self.md_ctrl)
         # raw html ctrl
         self.html_ctrl = HTMLReader(frame=self)
@@ -84,7 +83,7 @@ class MarkmojiFrame(qt.QWidget):
     def apply_theme(self):
         self.md_ctrl.style_text()
         self.html_ctrl.style_text()
-        self.html_view.apply_theme()
+        self.html_view.refresh_content()
     
     def on_text(self, evt=None):
         """

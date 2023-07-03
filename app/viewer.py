@@ -17,11 +17,9 @@ class HTMLViewer(html.QWebEngineView):
         self.setMinimumWidth(128)
         # set initial content
         self.body = ""
-        self.apply_theme()
+        self.refresh_content()
     
-    def apply_theme(self):
-        # get stylesheet
-        self.stylesheet = self.app.theme.viewer.spec
+    def refresh_content(self, evt=None):
         # set content again
         self.set_body(self.body)
     
@@ -30,11 +28,14 @@ class HTMLViewer(html.QWebEngineView):
         start = time.time()
         # store value
         self.body = content
+        # stop here if viewer isn't shown
+        if not self.isVisible():
+            return
         # preview HTML
         content_html = (
             f"<head>\n"
             f"<style>\n"
-            f"{self.stylesheet}\n"
+            f"{self.app.theme.viewer.spec}\n"
             f"</style>\n"
             f"</head>\n"
             f"<body>\n"
@@ -49,3 +50,10 @@ class HTMLViewer(html.QWebEngineView):
         # only keep last 10 render durs
         if len(self._render_durs) > 10:
             self._render_durs = self._render_durs[-10:]
+
+    def showEvent(self, event):
+        self.refresh_content()
+        return html.QWebEngineView.showEvent(self, event)
+    
+    def hideEvent(self, event):
+        return html.QWebEngineView.hideEvent(self, event)
