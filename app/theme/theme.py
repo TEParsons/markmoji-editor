@@ -123,7 +123,7 @@ class Theme:
             self,
             viewer="catppuccin.latte",
             editor="catppuccin.latte",
-            app="catppuccin.frappe"
+            app="catppuccin.latte"
     ):
        self.viewer = viewer
        self.editor = editor

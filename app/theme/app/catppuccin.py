@@ -69,7 +69,7 @@ set_colors(frappe, {
 # --- Catppuccin Latte ---
 latte_flavour = Flavour.latte()
 latte = QPalette()
-set_colors(frappe, {
+set_colors(latte, {
     QPalette.Base: latte_flavour.base,
     QPalette.AlternateBase: latte_flavour.crust,
     QPalette.Light: latte_flavour.overlay2,
