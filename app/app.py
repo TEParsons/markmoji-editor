@@ -15,6 +15,7 @@ class MarkmojiApp(qt.QApplication):
         qt.QApplication.__init__(
             self, argv
         )
+        self.setStyle("Fusion")
         # show splash (if requested)
         if show_splash:
             splash = qt.QSplashScreen(
@@ -82,7 +83,7 @@ class MarkmojiFrame(qt.QWidget):
         self.show()
     
     def apply_theme(self):
-        self.setPalette(self.app.theme.app.spec)
+        self.app.setPalette(self.app.theme.app.spec)
         self.md_ctrl.style_text()
         self.html_ctrl.style_text()
         self.html_view.refresh_content()
