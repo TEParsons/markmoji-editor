@@ -82,7 +82,7 @@ class MarkmojiFrame(qt.QWidget):
         self.show()
     
     def apply_theme(self):
-        self.setPalette(self.app.theme.app)
+        self.setPalette(self.app.theme.app.spec)
         self.md_ctrl.style_text()
         self.html_ctrl.style_text()
         self.html_view.refresh_content()

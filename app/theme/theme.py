@@ -63,7 +63,7 @@ class EditorStyle:
             package_name = self.stem
             variable = "style"
         # import package
-        package = importlib.import_module(f".theme.editor.{package_name}", package="markmoji_editor")
+        package = importlib.import_module(f".app.theme.editor.{package_name}", package="markmoji_editor")
         # get spec
         self.spec = getattr(package, variable)
 
@@ -95,7 +95,7 @@ class AppStyle:
             package_name = self.stem
             variable = "style"
         # import package
-        package = importlib.import_module(f".theme.app.{package_name}", package="markmoji_editor")
+        package = importlib.import_module(f".app.theme.app.{package_name}", package="markmoji_editor")
         # get spec
         self.spec = getattr(package, variable)
 
