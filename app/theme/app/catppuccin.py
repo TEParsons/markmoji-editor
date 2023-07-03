@@ -19,14 +19,18 @@ overlay2, overlay1, overlay0,
 surface2, surface1, surface0,
 base, mantle, crust,
 """
-
-
+def QC(value):
+    """
+    Shorthand for converting a Catppuccin colour to a PyQt colour.
+    """
+    return QColor("#" + value.hex)
 
 # --- Catppuccin Frappe ---
 _flav = Flavour.frappe()
 frappe = QPalette()
-frappe.setColor(QPalette.Button, QColor(_flav.mantle.hex))
-frappe.setColor(QPalette.Base, QColor(_flav.base.hex))
+frappe.setColor(QPalette.Window, QC(_flav.mantle))
+frappe.setColor(QPalette.Button, QC(_flav.crust))
+frappe.setColor(QPalette.Base, QC(_flav.base))
 
 
 # --- Catppuccin Latte ---
