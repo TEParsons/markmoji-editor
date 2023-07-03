@@ -7,10 +7,10 @@ class MarkmojiMenu(qt.QMenuBar):
         # initialise
         qt.QMenuBar.__init__(self, parent=parent)
         self.parent = parent
+        # remove border
+        self.setStyleSheet("border: none;")
 
         # theme menu
-        
-
         self.theme_menu = self.addMenu("&Theme")
         self.theme_menu.submenus = {}
         themes = get_all_themes()
