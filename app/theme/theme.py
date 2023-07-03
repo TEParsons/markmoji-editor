@@ -88,9 +88,16 @@ class AppStyle:
     def __init__(self, stem):
         # store stem
         self.stem = stem
-        # not implemented yet - just use default palette
-        from PyQt5.QtWidgets import QWidget
-        self.spec = QWidget().palette()
+        # get name of package and variable to find object by
+        if "." in self.stem:
+            package_name, variable = self.stem.split(".", maxsplit=1)
+        else:
+            package_name = self.stem
+            variable = "style"
+        # import package
+        package = importlib.import_module(f".theme.app.{package_name}", package="markmoji_editor")
+        # get spec
+        self.spec = getattr(package, variable)
 
 
 class Theme:
@@ -110,7 +117,7 @@ class Theme:
             self,
             viewer="light",
             editor="catppuccin.frappe",
-            app="light"
+            app="catppuccin.frappe"
     ):
        self.viewer = viewer
        self.editor = editor

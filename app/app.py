@@ -24,7 +24,7 @@ class MarkmojiApp(qt.QApplication):
             splash.start_time = time.time()
         
         # set theme
-        from ..theme import current
+        from .theme import current
         self.theme = current
         # make main window
         self.win = MarkmojiFrame(self)
@@ -82,6 +82,7 @@ class MarkmojiFrame(qt.QWidget):
         self.show()
     
     def apply_theme(self):
+        self.setPalette(self.app.theme.app)
         self.md_ctrl.style_text()
         self.html_ctrl.style_text()
         self.html_view.refresh_content()
