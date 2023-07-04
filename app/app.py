@@ -93,6 +93,7 @@ class MarkmojiFrame(qt.QMainWindow):
     
     def apply_theme(self):
         self.app.setPalette(self.app.theme.app.spec)
+        self.app.setStyle("Fusion")
         self.md_ctrl.style_text()
         self.html_ctrl.style_text()
         self.html_view.refresh_content()
