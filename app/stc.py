@@ -13,7 +13,7 @@ class StyledTextCtrl(qt.QTextEdit):
         self.app = self.frame.app
         self.setAcceptRichText(False)
         # set minimum size
-        self.setMinimumWidth(128)
+        self.setMinimumWidth(512)
         # setup lexer
         self.lexer = pygments.lexers.get_lexer_by_name(language)
         # setup right click

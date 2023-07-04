@@ -17,7 +17,7 @@ class HTMLViewer(html.QWebEngineView):
         self._last_render = 0
 
         # set minimum size
-        self.setMinimumWidth(128)
+        self.setMinimumWidth(512)
         # set initial content
         self.body = ""
         self.refresh_content()
