@@ -89,6 +89,16 @@ class MarkmojiFrame(qt.QMainWindow):
         self.view_ctrl.set_values((True, False, True))
         self.sizer.addWidget(self.view_ctrl, alignment=util.Qt.AlignHCenter)
 
+        # setup shortcuts
+        self.shortcuts = {
+            qt.QShortcut(gui.QKeySequence('Ctrl+N'), self): self.new,
+            qt.QShortcut(gui.QKeySequence('Ctrl+S'), self): self.save,
+            qt.QShortcut(gui.QKeySequence('Ctrl+Alt+S'), self): self.save_as,
+            qt.QShortcut(gui.QKeySequence('Ctrl+O'), self): self.open,
+        }
+        for sc, fcn in self.shortcuts.items():
+            sc.activated.connect(fcn)
+
         # load file
         if filename is not None:
             self.open(filename=filename)
