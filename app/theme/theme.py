@@ -209,4 +209,50 @@ def get_all_themes():
     return themes
 
 
+def get_combi_themes():
+    """
+    Get themes dict for only items present across all types (app, editor and viewer)
+    """
+    themes = get_all_themes()
+    # split all sets by target
+    app_sets = list(themes['app'])
+    editor_sets = list(themes['editor'])
+    viewer_sets = list(themes['viewer'])
+    # get list of unique set names
+    all_sets = list(set(app_sets + editor_sets + viewer_sets))
+    combi_sets = []
+    for this_set in all_sets:
+        # where is it present?
+        present_in = (
+            this_set in app_sets, 
+            this_set in editor_sets, 
+            this_set in viewer_sets
+        )
+        # if present in all, add to combi sets
+        if all(present_in):
+            combi_sets.append(this_set)
+    
+    # iterate through combi sets
+    combi_themes = {}
+    for this_set in combi_sets:
+        app_themes = themes['app'][this_set]
+        editor_themes = themes['editor'][this_set]
+        viewer_themes = themes['viewer'][this_set]
+        # get list of unique theme names
+        all_themes = list(set(app_themes + editor_themes + viewer_themes))
+        combi_themes[this_set] = []
+        for this_theme in all_themes:
+            # where is it present?
+            present_in = (
+                this_theme in app_themes,
+                this_theme in editor_themes,
+                this_theme in viewer_themes
+            )
+            # if present in all, add to combi themes
+            if all(present_in):
+                combi_themes[this_set].append(this_theme)
+    
+    return combi_themes
+
+
 current = Theme()

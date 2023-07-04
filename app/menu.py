@@ -1,5 +1,5 @@
 import PyQt5.QtWidgets as qt
-from .theme import current, get_all_themes
+from .theme import current, get_all_themes, get_combi_themes
 
 
 class MarkmojiMenu(qt.QMenuBar):
@@ -14,6 +14,15 @@ class MarkmojiMenu(qt.QMenuBar):
         self.theme_menu = self.addMenu("&Theme")
         self.theme_menu.submenus = {}
         themes = get_all_themes()
+        # combination themes
+        menu = self.theme_menu.submenus['all'] = self.theme_menu.addMenu("&Combination")
+        combi_themes = get_combi_themes()
+        for sub in combi_themes:
+            submenu = menu.addMenu(sub)
+            for item in themes['app'][sub]:
+                btn = submenu.addAction(item, self.set_theme)
+                btn.data = ("all", f"{sub}.{item}")
+                btn.setToolTip(f"{sub}.{item}")
         # app themes
         menu = self.theme_menu.submenus['app'] = self.theme_menu.addMenu("&App")
         for sub in themes['app']:
@@ -44,8 +53,14 @@ class MarkmojiMenu(qt.QMenuBar):
         btn = self.sender()
         # get data
         target, theme = btn.data
+        # make target iterable
+        if target == "all":
+            target = ("app", "editor", "viewer")
+        elif isinstance(target, str):
+            target = [target]
         # set theme
-        setattr(current, target, theme)
+        for t in target:
+            setattr(current, t, theme)
         # apply theme
         self.parent.apply_theme()
 
