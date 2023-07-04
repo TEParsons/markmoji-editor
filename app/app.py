@@ -106,6 +106,19 @@ class MarkmojiFrame(qt.QMainWindow):
         # show
         self.apply_theme()
         self.show()
+    
+    @property
+    def filename(self):
+        return self._filename
+    
+    @filename.setter
+    def filename(self, value):
+        if value is None:
+            self._filename = None
+            self.setWindowTitle(f"Markmoji (v{markmoji.__version__})")
+        else:
+            self._filename = Path(value)
+            self.setWindowTitle(f"{self._filename.name} - Markmoji (v{markmoji.__version__})")
 
     def apply_theme(self):
         self.app.setPalette(self.app.theme.app.spec)
