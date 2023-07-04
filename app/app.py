@@ -7,6 +7,8 @@ import PyQt5.QtCore as util
 import PyQt5.QtWidgets as qt
 import PyQt5.QtGui as gui
 
+from pathlib import Path
+
 from . import stc, viewer, toggle, menu
 
 
@@ -37,7 +39,7 @@ class MarkmojiApp(qt.QApplication):
             splash.close()
 
 class MarkmojiFrame(qt.QMainWindow):
-    def __init__(self, app):
+    def __init__(self, app, filename=None):
         # create
         qt.QWidget.__init__(self)
         self.app = app
@@ -87,10 +89,14 @@ class MarkmojiFrame(qt.QMainWindow):
         self.view_ctrl.set_values((True, False, True))
         self.sizer.addWidget(self.view_ctrl, alignment=util.Qt.AlignHCenter)
 
+        # load file
+        if filename is not None:
+            self.open(filename=filename)
+
         # show
         self.apply_theme()
         self.show()
-    
+
     def apply_theme(self):
         self.app.setPalette(self.app.theme.app.spec)
         self.app.setStyle("Fusion")
@@ -132,6 +138,70 @@ class MarkmojiFrame(qt.QMainWindow):
         self.html_ctrl.style_text()
         # apply to HTML viewer
         self.html_view.set_body(content_html)
+    
+    def new(self):
+        # create a new frame
+        MarkmojiFrame(self.app)
+    
+    def open(self, filename=None):
+        if filename is None:
+            # open file dlg
+            filename, _ = qt.QFileDialog.getOpenFileName(self, "Open...", "C://", "Markdown files (*.md)")
+            # cancel if cancelled
+            if not filename:
+                return
+        # store filename
+        self.filename = Path(filename)
+        # read file
+        content_md = self.filename.read_text(encoding="utf-8")
+        # set text
+        self.md_ctrl.setText(content_md)
+    
+    def save(self):
+        # call save as on current file
+        self.save_as(filename=self.filename)
+
+    def save_as(self, filename=None):
+        if filename is None:
+            # open file dlg
+            filename, _ = qt.QFileDialog.getSaveFileName(self, "Save as...", "C://", "Markdown files (*.md)")
+            # cancel if cancelled
+            if not filename:
+                return
+        # store filename
+        self.filename = Path(filename)
+        # get markdown content
+        content_md = self.md_ctrl.toPlainText()
+        # save markdown content
+        self.filename.write_text(content_md, encoding="utf-8")
+    
+    def export_raw_html(self, filename=None):
+        if filename is None:
+            # open file dlg
+            filename, _ = qt.QFileDialog.getSaveFileName(self, "Export as...", "C://", "HTML files (*.html)")
+            # cancel if cancelled
+            if not filename:
+                return
+        # pathify filename
+        filename = Path(filename)
+        # get HTML
+        content_html = self.html_ctrl.getPlainText()
+        # export html content
+        filename.write_text(content_html, encoding="utf-8")
+
+    def export_styled_html(self, filename=None):
+        if filename is None:
+            # open file dlg
+            filename, _ = qt.QFileDialog.getSaveFileName(self, "Export as...", "C://", "HTML files (*.html)")
+            # cancel if cancelled
+            if not filename:
+                return
+        # pathify filename
+        filename = Path(filename)
+        # todo: get HTML
+        content_html = ""
+        # export html content
+        filename.write_text(content_html, encoding="utf-8")
 
 
 class MarkmojiEditor(stc.StyledTextCtrl):

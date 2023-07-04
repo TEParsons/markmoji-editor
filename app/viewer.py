@@ -1,5 +1,8 @@
 import time
 import PyQt5.QtWebEngineWidgets as html
+import PyQt5.QtCore as util
+
+from pathlib import Path
 
 
 class HTMLViewer(html.QWebEngineView):
@@ -31,7 +34,7 @@ class HTMLViewer(html.QWebEngineView):
         # stop here if viewer isn't shown
         if not self.isVisible():
             return
-        # preview HTML
+        # construct HTML
         content_html = (
             f"<head>\n"
             f"<style>\n"
@@ -42,7 +45,16 @@ class HTMLViewer(html.QWebEngineView):
             f"{self.body}\n"
             f"</body>"
         )
-        self.setHtml(content_html)
+        # get base url
+        if hasattr(self.frame, "filename") and self.frame.filename is not None:
+            filename = Path(self.frame.filename)
+            base = filename.parent / (filename.stem + ".html")
+        else:
+            filename = Path(__file__)
+            base = filename.parent.parent / "assets" / "untitled.html"
+        base_url = util.QUrl.fromLocalFile(str(base))
+        # set HTML
+        self.setHtml(content_html, base_url)
         # store time of this render
         self._last_render = time.time()
         # store render dur

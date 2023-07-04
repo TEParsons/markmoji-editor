@@ -10,7 +10,28 @@ class MarkmojiMenu(qt.QMenuBar):
         # remove border
         self.setStyleSheet("border: none;")
 
-        # theme menu
+        # --- file menu ---
+        self.file_menu = self.addMenu("&File")
+        # new
+        btn = self.file_menu.addAction("&New...", self.on_file_menu)
+        btn.data = "new"
+        # open
+        btn = self.file_menu.addAction("&Open...", self.on_file_menu)
+        btn.data = "open"
+        # save
+        btn = self.file_menu.addAction("&Save", self.on_file_menu)
+        btn.data = "save"
+        # save as
+        btn = self.file_menu.addAction("Save &as...", self.on_file_menu)
+        btn.data = "save_as"
+        # export raw
+        btn = self.file_menu.addAction("Export raw HTML", self.on_file_menu)
+        btn.data = "export_raw_html"
+        # export styled
+        btn = self.file_menu.addAction("&Export styled HTML", self.on_file_menu)
+        btn.data = "export_styled_html"
+
+        # --- theme menu ---
         self.theme_menu = self.addMenu("&Theme")
         self.theme_menu.submenus = {}
         themes = get_all_themes()
@@ -63,4 +84,8 @@ class MarkmojiMenu(qt.QMenuBar):
             setattr(current, t, theme)
         # apply theme
         self.parent.apply_theme()
-
+    
+    def on_file_menu(self, evt=None):
+        btn = self.sender()
+        # call linked function with no arguments
+        getattr(self.parent, btn.data)()
