@@ -195,7 +195,7 @@ class MarkmojiFrame(qt.QMainWindow):
         # pathify filename
         filename = Path(filename)
         # get HTML
-        content_html = self.html_ctrl.getPlainText()
+        content_html = self.html_ctrl.toPlainText()
         # export html content
         filename.write_text(content_html, encoding="utf-8")
 
@@ -209,7 +209,7 @@ class MarkmojiFrame(qt.QMainWindow):
         # pathify filename
         filename = Path(filename)
         # todo: get HTML
-        content_html = ""
+        content_html = self.html_ctrl.toPlainText()
         # export html content
         filename.write_text(content_html, encoding="utf-8")
 
