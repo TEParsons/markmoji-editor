@@ -34,7 +34,7 @@ class MarkmojiApp(qt.QApplication):
 
         # close splash (if shown)
         if show_splash:    
-            while time.time() - self.app.splash.start_time < 2.5:
+            while time.time() - splash.start_time < 2.5:
                 pass
             splash.close()
 
