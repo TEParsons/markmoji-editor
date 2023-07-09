@@ -83,9 +83,9 @@ class MarkmojiFrame(qt.QMainWindow):
 
         # add view toggle
         self.view_ctrl = toggle.ViewToggle(self)
-        self.view_ctrl.add_button(ctrl=self.md_ctrl, icon_name="view_md")
-        self.view_ctrl.add_button(ctrl=self.html_ctrl, icon_name="view_html")
-        self.view_ctrl.add_button(ctrl=self.html_view, icon_name="view_preview")
+        self.view_ctrl.add_button(ctrl=self.md_ctrl, tooltip="Toggle raw markdown view", icon_name="view_md")
+        self.view_ctrl.add_button(ctrl=self.html_ctrl, tooltip="Toggle raw HTML view", icon_name="view_html")
+        self.view_ctrl.add_button(ctrl=self.html_view, tooltip="Toggle rendered HTML view", icon_name="view_preview")
         self.view_ctrl.set_values((True, False, True))
         self.sizer.addWidget(self.view_ctrl, alignment=util.Qt.AlignHCenter)
 

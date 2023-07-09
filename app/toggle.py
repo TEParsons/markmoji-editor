@@ -6,7 +6,7 @@ import PyQt5.QtCore as util
 class ViewToggle(qt.QWidget):
 
     class ViewToggleButton(qt.QPushButton):
-        def __init__(self, parent, ctrl, icon_name=None, label=""):
+        def __init__(self, parent, ctrl, tooltip=None, icon_name=None, label=""):
             # initialise
             qt.QPushButton.__init__(self, "", parent)
             self.parent = parent
@@ -19,6 +19,11 @@ class ViewToggle(qt.QWidget):
                 self.setIcon(icon)
             # set label
             self.setText(label)
+            # set tooltip
+            if tooltip is None:
+                # if none given, use label
+                tooltip = label
+            self.setToolTip(tooltip)
             # set size
             self.setIconSize(util.QSize(16, 16))
             self.setMaximumSize(48, 32)
@@ -38,9 +43,9 @@ class ViewToggle(qt.QWidget):
         # array for buttons
         self.btns = []
     
-    def add_button(self, ctrl, icon_name=None, label=""):
+    def add_button(self, ctrl, tooltip=None, icon_name=None, label=""):
         # make button
-        btn = self.ViewToggleButton(self, ctrl, icon_name=icon_name, label=label)
+        btn = self.ViewToggleButton(self, ctrl, tooltip=tooltip, icon_name=icon_name, label=label)
         self.btns.append(btn)
         # add to sizer
         self.sizer.addWidget(btn)
